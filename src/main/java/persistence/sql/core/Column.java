@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Column {
 
@@ -44,7 +45,7 @@ public class Column {
     private static List<Annotation> generateColumnAnnotations(Annotation[] annotations) {
         return Arrays.stream(annotations)
                 .filter(annotation -> !annotation.annotationType().equals(Transient.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private static String generateColumnName(Field field) {
@@ -59,18 +60,6 @@ public class Column {
 
     public String getName() {
         return name;
-    }
-
-    public List<Annotation> getAnnotations() {
-        return annotations;
-    }
-
-    public Class<?> getType() {
-        return type;
-    }
-
-    public Object getValue() {
-        return value;
     }
 
     public static String convertCamelCaseToSnakeCase(String input) {

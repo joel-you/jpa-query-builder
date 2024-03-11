@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import persistence.sql.ddl.CreateQueryBuilder;
+import persistence.sql.ddl.DropQueryBuilder;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.dialect.H2Dialect;
 
@@ -18,10 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SimpleEntityManagerTest {
-
+    private final Dialect DIALECT = new H2Dialect();
     private JdbcTemplate jdbcTemplate;
     private EntityManager entityManager;
-    private Dialect DIALECT = new H2Dialect();
     private DatabaseServer server;
     private Person person;
 
@@ -44,6 +44,12 @@ class SimpleEntityManagerTest {
 
     @AfterEach
     void tearDown() {
+        jdbcTemplate.execute(DropQueryBuilder.builder()
+                .dialect(DIALECT)
+                .entity(Person.class)
+                .build()
+                .generateQuery());
+
         server.stop();
     }
 

@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EntityRowMapper<T> implements RowMapper<T> {
     private final Class<T> clazz;
@@ -30,7 +31,7 @@ public class EntityRowMapper<T> implements RowMapper<T> {
     private List<Field> getFields() {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private T convertToInstance(ResultSet resultSet, List<Field> fields) {
@@ -38,16 +39,19 @@ public class EntityRowMapper<T> implements RowMapper<T> {
 
         try {
             instance = clazz.getDeclaredConstructor().newInstance();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                ColumnMetadata columnMetadata = ColumnMetadata.of(field);
-                field.set(instance, resultSet.getObject(columnMetadata.getName()));
-            }
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
-                 SQLException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
 
+        for (Field field : fields) {
+            field.setAccessible(true);
+            ColumnMetadata columnMetadata = ColumnMetadata.of(field);
+            try {
+                field.set(instance, resultSet.getObject(columnMetadata.getName()));
+            } catch (SQLException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return instance;
     }
 }

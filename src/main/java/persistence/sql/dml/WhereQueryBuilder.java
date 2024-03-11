@@ -6,6 +6,7 @@ import persistence.sql.dml.conditions.WhereRecord;
 import persistence.sql.metadata.ColumnsMetadata;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WhereQueryBuilder {
 
@@ -14,8 +15,8 @@ public class WhereQueryBuilder {
 
     public WhereQueryBuilder(ColumnsMetadata columns, List<WhereRecord> whereRecords) {
         this.whereConditions = WhereConditions.of(whereRecords.stream()
-                .map(whereRecord -> WhereCondition.of(columns.getColumn(whereRecord.name()), whereRecord.operator(), whereRecord.value()))
-                .toList());
+                .map(whereRecord -> WhereCondition.of(columns.getColumn(whereRecord.getName()), whereRecord.getOperator(), whereRecord.getValue()))
+                .collect(Collectors.toList()));
     }
 
     public String generateWhereClausesQuery() {

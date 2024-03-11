@@ -25,7 +25,7 @@ public class SimpleEntityManager implements EntityManager {
         SelectQueryBuilder selectQueryBuilder = SelectQueryBuilder.builder()
                 .dialect(dialect)
                 .entity(clazz)
-                .where(List.of(new WhereRecord("id", "=", Id)))
+                .where(List.of(WhereRecord.of("id", "=", Id)))
                 .build();
 
         return jdbcTemplate.queryForObject(selectQueryBuilder.generateQuery(), resultSet -> new EntityRowMapper<>(clazz).mapRow(resultSet));

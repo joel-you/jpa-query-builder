@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class EntityMetadata {
 
@@ -57,7 +58,8 @@ public class EntityMetadata {
     public static List<ColumnMetadata> createColumns(Class<?> clazz, Object entity) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> !field.isAnnotationPresent(Transient.class))
-                .map(field -> Objects.nonNull(entity) ? ColumnMetadata.of(field, entity) : ColumnMetadata.of(field)).toList();
+                .map(field -> Objects.nonNull(entity) ? ColumnMetadata.of(field, entity) : ColumnMetadata.of(field))
+                .collect(Collectors.toList());
     }
 
     public String getName() {

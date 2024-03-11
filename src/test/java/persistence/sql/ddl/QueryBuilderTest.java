@@ -85,7 +85,7 @@ class QueryBuilderTest {
     void generateSelectOneQuery() {
         selectQueryBuilder = SelectQueryBuilder.builder()
                 .entity(Person.class)
-                .where(List.of(new WhereRecord("id", "=", 1L)))
+                .where(List.of(WhereRecord.of("id", "=", 1L)))
                 .build();
         String selectOneQuery = selectQueryBuilder.generateQuery();
 
@@ -111,7 +111,7 @@ class QueryBuilderTest {
         deleteQueryBuilder = DeleteQueryBuilder.builder()
                 .dialect(DIALECT)
                 .entity(Person.class)
-                .where(List.of(new WhereRecord("id", "=", 1L)))
+                .where(List.of(WhereRecord.of("id", "=", 1L)))
                 .build();
         String deleteOneQuery = deleteQueryBuilder.generateQuery();
 

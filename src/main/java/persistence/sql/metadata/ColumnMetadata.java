@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ColumnMetadata {
 
@@ -44,7 +45,7 @@ public class ColumnMetadata {
     private static List<Annotation> generateColumnAnnotations(Annotation[] annotations) {
         return Arrays.stream(annotations)
                 .filter(annotation -> !annotation.annotationType().equals(Transient.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private static String generateColumnName(Field field) {
